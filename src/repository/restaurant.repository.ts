@@ -15,6 +15,7 @@ export class RestaurantRepository implements IRestaurantRepository {
     await this.connection.knex.transaction(async (trx) => {
       try {
         const response = await trx('restaurant')
+          .withSchema(process.env.DB_SCHEMA)
           .insert(model)
         if (response && response.length > 0) {
           id = response[0];
@@ -31,6 +32,7 @@ export class RestaurantRepository implements IRestaurantRepository {
   async getRestaurant(id: string): Promise<RestaurantModel> {
     try {
       const query = this.connection.knex('restaurant')
+        .withSchema(process.env.DB_SCHEMA)
         .select('*')
         .where({ id });
       const response = await query;
@@ -49,6 +51,7 @@ export class RestaurantRepository implements IRestaurantRepository {
     await this.connection.knex.transaction(async (trx) => {
       try {
         updatedRows = await trx('restaurant')
+          .withSchema(process.env.DB_SCHEMA)
           .where({ id: model.id })
           .update({
             rating: model.rating,
@@ -76,6 +79,7 @@ export class RestaurantRepository implements IRestaurantRepository {
     await this.connection.knex.transaction(async (trx) => {
       try {
         deletedRows = await trx('restaurant')
+          .withSchema(process.env.DB_SCHEMA)
           .where({ id })
           .del();
         await trx.commit();

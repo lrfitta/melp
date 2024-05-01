@@ -27,6 +27,7 @@ export class ConnectionService {
         user: connectionOptions.user,
         password: connectionOptions.password,
         database: connectionOptions.database,
+        ssl: false
       },
       pool: this.createPool(
         Utils.toInt(process.env.DB_POOL_MIN || '1'),
