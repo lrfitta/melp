@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RestaurantDto } from 'src/dto/restaurant.dto';
+import { RestaurantColumn, RestaurantDto, RestaurantOptionalDto } from 'src/dto/restaurant.dto';
 import { MelpError } from 'src/exception/melp.exception';
 import { RestaurantModel } from 'src/model/entities';
 import { RestaurantRepository } from 'src/repository/restaurant.repository';
@@ -11,6 +11,18 @@ export class RestaurantService implements IRestaurantService {
   private readonly logger = new Logger(RestaurantService.name);
 
   constructor(private readonly repository: RestaurantRepository) { }
+
+  async deleteRestaurant(id: string): Promise<RestaurantDto> {
+    const restaturant = await this.existRestaurant(id);
+    if (!restaturant) {
+      throw new MelpError(`${id} not exist.`, 'Data', 404);
+    }
+    const deletedRows = await this.repository.deleteRestaurant(id);
+    if (deletedRows != 1) {
+      throw new MelpError(`Error deleting the row`, 'Unexpected Error', 500);
+    }
+    return restaturant;
+  }
 
   async existRestaurant(id: string): Promise<RestaurantDto> {
     this.logger.log(`Searching id ${id}`);
@@ -32,7 +44,7 @@ export class RestaurantService implements IRestaurantService {
     const model: RestaurantModel = { ...dto, created_at: new Date() };
     const inserted = await this.repository.createRestaurant(model);
     this.logger.log(`Rows inserted ${inserted}`);
-    return inserted > 0;
+    return inserted == 1;
   }
 
   async getRestaurant(id: string): Promise<RestaurantDto> {
@@ -41,6 +53,23 @@ export class RestaurantService implements IRestaurantService {
       throw new MelpError(`${id} not exist.`, 'Data', 404);
     }
     return restaturant;
+  }
+
+  async updateRestaurant(dto: RestaurantOptionalDto): Promise<boolean> {
+    const restaurant = await this.existRestaurant(dto.id);
+    if (!restaurant) {
+      throw new MelpError(`${dto.id} not exists.`, 'Data', 404);
+    }
+    const keys: RestaurantColumn[] = ['rating', 'city', 'email', 'lat', 'lng', 'name', 'phone', 'rating', 'site', 'state'];
+    const partial: Partial<RestaurantModel> = { updated_at: new Date() };
+    for (const key of keys) {
+      const k = key as string;
+      if (dto[key] != restaurant[key]) {
+        partial[k] = dto[key];
+      }
+    }
+    const updatedRows = await this.repository.updateRestaurant(dto.id, partial);
+    return updatedRows == 1;
   }
 
 }

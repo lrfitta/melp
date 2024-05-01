@@ -61,25 +61,14 @@ export class RestaurantRepository implements IRestaurantRepository {
     return null;
   }
 
-  async updateRestaurant(model: RestaurantModel): Promise<number> {
+  async updateRestaurant(id: string, model: Partial<RestaurantModel>): Promise<number> {
     let updatedRows = 0;
     await this.connection.knex.transaction(async (trx) => {
       try {
         updatedRows = await trx('restaurant')
           .withSchema(process.env.DB_SCHEMA)
-          .where({ id: model.id })
-          .update({
-            rating: model.rating,
-            name: model.name,
-            site: model.site,
-            email: model.email,
-            phone: model.phone,
-            city: model.city,
-            state: model.state,
-            lat: model.lat,
-            lng: model.lng,
-            updated_at: new Date()
-          })
+          .where({ id })
+          .update(model)
         await trx.commit();
       } catch (error) {
         await trx.rollback();

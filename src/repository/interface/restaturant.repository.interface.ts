@@ -6,7 +6,7 @@ export interface IRestaurantRepository {
   //Fetch a row from the DB.
   getRestaurant(id: string): Promise<RestaurantModel | null>
   //Update a row in the table.
-  updateRestaurant(model: RestaurantModel): Promise<number>;
+  updateRestaurant(id: string, model: Partial<RestaurantModel>): Promise<number>;
   //Update a row in the table.
   deleteRestaurant(id: string): Promise<number>;
 }

@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Logger, Param, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, UseFilters } from '@nestjs/common';
 import { ResponseRestaurant } from 'src/dto/response.dto';
-import { RestaurantDto } from 'src/dto/restaurant.dto';
+import { RestaurantDto, RestaurantOptionalDto } from 'src/dto/restaurant.dto';
 import { HttpExceptionFilter } from 'src/exception/exception.filter';
 import { RestaurantService } from 'src/service/restaurant.service';
 
@@ -13,20 +13,42 @@ export class RestaurantController {
 
   @Get('/restaurant/:id')
   @UseFilters(new HttpExceptionFilter())
-  async getRestauranteById(@Param('id') id: string): Promise<RestaurantDto> {
+  async getRestaurantById(@Param('id') id: string): Promise<RestaurantDto> {
     const restaurant = await this.service.getRestaurant(id);
     return restaurant;
   }
 
   @Post('/restaurant')
   @UseFilters(new HttpExceptionFilter())
-  async createRestaurante(@Body() restaurant: RestaurantDto): Promise<ResponseRestaurant> {
+  async createRestaurant(@Body() restaurant: RestaurantDto): Promise<ResponseRestaurant> {
     const flag = await this.service.createRestaurant(restaurant);
     let statusCode = 200;
     let message = ['Success creating the record'];
     if (!flag) {
       statusCode = 500;
       message = ['Error creating the record'];
+    }
+    return {
+      message, statusCode
+    }
+  }
+
+  @Delete('/restaurant/:id')
+  @UseFilters(new HttpExceptionFilter())
+  async deleteRestaurantById(@Param('id') id: string): Promise<RestaurantDto> {
+    const restaurant = await this.service.deleteRestaurant(id);
+    return restaurant;
+  }
+
+  @Patch('/restaurant')
+  @UseFilters(new HttpExceptionFilter())
+  async updateRestaurant(@Body() restaurant: RestaurantOptionalDto): Promise<ResponseRestaurant> {
+    const flag = await this.service.updateRestaurant(restaurant);
+    let statusCode = 200;
+    let message = ['Success updating the record'];
+    if (!flag) {
+      statusCode = 500;
+      message = ['Error updating the record'];
     }
     return {
       message, statusCode
