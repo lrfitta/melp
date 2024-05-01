@@ -28,4 +28,8 @@ export class Utils {
       return def;
     }
   }
+
+  static round2Decimals(num: number): number {
+    return Math.round((num + Number.EPSILON) * 100) / 100;
+  }
 }

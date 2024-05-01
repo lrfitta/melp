@@ -95,4 +95,38 @@ export class RestaurantRepository implements IRestaurantRepository {
     });
     return deletedRows;
   }
-} 
+
+  async getRestaurantsByRadius(lng: number, lat: number, radius: number): Promise<RestaurantModel[]> {
+    try {
+      const knex = this.connection.knex;
+      const query = knex('restaurant')
+        .withSchema(process.env.DB_SCHEMA)
+        .select('*')
+        .where(knex.raw(`ST_DWithin(ST_MakePoint(lng, lat):: geography,ST_GeomFromText('POINT(${lng} ${lat})', 4326):: geography,${radius})`))
+      const response = await query;
+      if (!response || response.length == 0) {
+        return [];
+      }
+      return response.map(first => {
+        return {
+          created_at: first.created_at,
+          id: first.id,
+          lat: Utils.parseNumber(first.lat),
+          lng: Utils.parseNumber(first.lng),
+          name: first.name,
+          city: first.city,
+          email: first.email,
+          phone: first.phone,
+          rating: Utils.toInt(first.rating),
+          site: first.site,
+          state: first.state,
+          updated_at: first.updated_at,
+          street: first.street
+        };
+      })
+    } catch (exception) {
+      this.logger.error(`Error searching the restaurant`, exception);
+    }
+    return [];
+  }
+}
