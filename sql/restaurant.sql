@@ -19,3 +19,5 @@ create table melp_evaluation.restaurant(
 
 ALTER TABLE melp_evaluation.restaurant OWNER to melp_user;
 GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE melp_evaluation.restaurant TO melp_user;
+
+CREATE INDEX ON melp_evaluation.restaurant (lat, lng);

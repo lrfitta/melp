@@ -1,4 +1,5 @@
-import { RestaurantDto, RestaurantOptionalDto } from "src/dto/restaurant.dto";
+import { ResponseStatistics } from "src/dto/response.dto";
+import { RestaurantDto, RestaurantOptionalDto, StatisticsDto } from "src/dto/restaurant.dto";
 
 export interface IRestaurantService {
   //Validate if a id exist or not
@@ -11,4 +12,6 @@ export interface IRestaurantService {
   deleteRestaurant(id: string): Promise<RestaurantDto>;
   //create a row
   updateRestaurant(dto: RestaurantOptionalDto): Promise<boolean>;
+  //fetch statistics
+  getStatistics(params: StatisticsDto): Promise<ResponseStatistics>;
 }

@@ -9,4 +9,6 @@ export interface IRestaurantRepository {
   updateRestaurant(id: string, model: Partial<RestaurantModel>): Promise<number>;
   //Update a row in the table.
   deleteRestaurant(id: string): Promise<number>;
+  //find restauranst by lat and long
+  getRestaurantsByRadius(lng: number, lat: number, radius: number): Promise<RestaurantModel[]>
 }

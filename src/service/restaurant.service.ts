@@ -1,8 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RestaurantColumn, RestaurantDto, RestaurantOptionalDto } from 'src/dto/restaurant.dto';
+import { ResponseStatistics } from 'src/dto/response.dto';
+import { RestaurantColumn, RestaurantDto, RestaurantOptionalDto, StatisticsDto } from 'src/dto/restaurant.dto';
 import { MelpError } from 'src/exception/melp.exception';
 import { RestaurantModel } from 'src/model/entities';
 import { RestaurantRepository } from 'src/repository/restaurant.repository';
+import { Utils } from 'src/util/utils';
 import { IRestaurantService } from './interface/restaurant.service.interface';
 
 @Injectable()
@@ -11,6 +13,23 @@ export class RestaurantService implements IRestaurantService {
   private readonly logger = new Logger(RestaurantService.name);
 
   constructor(private readonly repository: RestaurantRepository) { }
+
+  async getStatistics(dto: StatisticsDto): Promise<ResponseStatistics> {
+    this.logger.log(`Lat: ${dto.lat}`);
+    this.logger.log(`Long: ${dto.lng}`);
+    this.logger.log(`Radius: ${dto.radius}`);
+    let count = 0;
+    let avg = 0;
+    let std = 0;
+    const restaurants = await this.repository.getRestaurantsByRadius(dto.lng, dto.lat, dto.radius);
+    if (!restaurants || restaurants.length == 0) {
+      throw new MelpError(`There arenot restaurants in the area`, 'Data', 500);
+    }
+    count = restaurants.length;
+    avg = Utils.round2Decimals(restaurants.reduce((p, c) => p + c.rating, 0) / restaurants.length);
+    std = Utils.round2Decimals(Math.pow(restaurants.reduce((p, c) => p + Math.pow(c.rating - avg, 2), 0) / (count - 1), 0.5));
+    return { count, avg, std };
+  }
 
   async deleteRestaurant(id: string): Promise<RestaurantDto> {
     const restaturant = await this.existRestaurant(id);
