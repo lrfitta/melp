@@ -11,14 +11,14 @@ export class RestaurantController {
 
   constructor(private readonly service: RestaurantService) { }
 
-  @Get('/restaurant/:id')
+  @Get('/restaurants/:id')
   @UseFilters(new HttpExceptionFilter())
   async getRestaurantById(@Param('id') id: string): Promise<RestaurantDto> {
     const restaurant = await this.service.getRestaurant(id);
     return restaurant;
   }
 
-  @Post('/restaurant')
+  @Post('/restaurants')
   @UseFilters(new HttpExceptionFilter())
   async createRestaurant(@Body() restaurant: RestaurantDto): Promise<ResponseRestaurant> {
     const flag = await this.service.createRestaurant(restaurant);
@@ -33,14 +33,14 @@ export class RestaurantController {
     }
   }
 
-  @Delete('/restaurant/:id')
+  @Delete('/restaurants/:id')
   @UseFilters(new HttpExceptionFilter())
   async deleteRestaurantById(@Param('id') id: string): Promise<RestaurantDto> {
     const restaurant = await this.service.deleteRestaurant(id);
     return restaurant;
   }
 
-  @Patch('/restaurant')
+  @Patch('/restaurants')
   @UseFilters(new HttpExceptionFilter())
   async updateRestaurant(@Body() restaurant: RestaurantOptionalDto): Promise<ResponseRestaurant> {
     const flag = await this.service.updateRestaurant(restaurant);
