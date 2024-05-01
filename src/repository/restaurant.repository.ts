@@ -53,7 +53,8 @@ export class RestaurantRepository implements IRestaurantRepository {
         rating: Utils.toInt(first.rating),
         site: first.site,
         state: first.state,
-        updated_at: first.updated_at
+        updated_at: first.updated_at,
+        street: first.street
       };
     } catch (exception) {
       this.logger.error(`Error searching the restaurant ${id}`, exception);

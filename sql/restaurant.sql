@@ -7,12 +7,13 @@ create table melp_evaluation.restaurant(
     site text,
     email text,
     phone text,
+    street text,
     city text,
     state text,
     lat DECIMAL not null,
     lng DECIMAL not null,
     created_at timestamp with time zone DEFAULT current_timestamp,
-    updated_at timestamp with time zone DEFAULT current_timestamp,
+    updated_at timestamp with time zone,
     PRIMARY KEY(id)
 );
 

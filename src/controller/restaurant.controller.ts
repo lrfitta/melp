@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, UseFilters } from '@nestjs/common';
 import { ResponseRestaurant } from 'src/dto/response.dto';
-import { RestaurantDto, RestaurantOptionalDto } from 'src/dto/restaurant.dto';
+import { RestaurantDto, RestaurantOptionalDto, StatisticsDto } from 'src/dto/restaurant.dto';
 import { HttpExceptionFilter } from 'src/exception/exception.filter';
 import { RestaurantService } from 'src/service/restaurant.service';
 
@@ -54,4 +54,11 @@ export class RestaurantController {
       message, statusCode
     }
   }
+
+  @Get('/restaurants/statistics')
+  @UseFilters(new HttpExceptionFilter())
+  async getStatistics(@Query() params: StatisticsDto) {
+
+  }
 }
+

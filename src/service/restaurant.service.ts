@@ -60,7 +60,7 @@ export class RestaurantService implements IRestaurantService {
     if (!restaurant) {
       throw new MelpError(`${dto.id} not exists.`, 'Data', 404);
     }
-    const keys: RestaurantColumn[] = ['rating', 'city', 'email', 'lat', 'lng', 'name', 'phone', 'rating', 'site', 'state'];
+    const keys: RestaurantColumn[] = ['rating', 'city', 'email', 'lat', 'lng', 'name', 'phone', 'rating', 'site', 'state', 'street'];
     const partial: Partial<RestaurantModel> = { updated_at: new Date() };
     for (const key of keys) {
       const k = key as string;

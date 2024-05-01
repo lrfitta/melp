@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEmail, IsLatitude, IsLongitude, IsNotEmpty, IsOptional, IsString, Max, Min } from "class-validator";
+import { IsEmail, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsOptional, IsString, Max, Min } from "class-validator";
 
 export type RestaurantColumn = keyof RestaurantDto;
 
@@ -21,6 +21,7 @@ export class RestaurantDto {
   @IsEmail()
   email?: string | null;
   phone?: string | null;
+  street?: string | null;
   city?: string | null;
   state?: string | null;
   @IsNotEmpty({ message: 'Lat is mandatory' })
@@ -53,6 +54,8 @@ export class RestaurantOptionalDto {
   @IsOptional()
   phone?: string | null;
   @IsOptional()
+  street?: string | null;
+  @IsOptional()
   city?: string | null;
   @IsOptional()
   state?: string | null;
@@ -64,4 +67,18 @@ export class RestaurantOptionalDto {
   @IsNotEmpty({ message: 'Lng is mandatory' })
   @IsLongitude()
   lng: number;
+}
+
+//Statistics
+export class StatisticsDto {
+  @IsNotEmpty({ message: 'Lat is mandatory' })
+  @IsLatitude()
+  lat: number;
+  @IsNotEmpty({ message: 'Lng is mandatory' })
+  @IsLongitude()
+  lng: number;
+  @IsInt({ message: 'Radius must be a int value' })
+  @Type(() => Number)
+  @IsNotEmpty({ message: 'Radius is mandatory' })
+  radius: number;
 }

@@ -6,6 +6,7 @@ export interface RestaurantModel {
   site?: string | null;
   email?: string | null;
   phone?: string | null;
+  street?: string | null;
   city?: string | null;
   state?: string | null;
   lat: number;
