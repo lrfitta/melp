@@ -9,8 +9,8 @@ create table melp_evaluation.restaurant(
     phone text,
     city text,
     state text,
-    lat numeric(12,12),
-    lng numeric(12,12),
+    lat DECIMAL not null,
+    lng DECIMAL not null,
     created_at timestamp with time zone DEFAULT current_timestamp,
     updated_at timestamp with time zone DEFAULT current_timestamp,
     PRIMARY KEY(id)

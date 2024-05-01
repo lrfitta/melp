@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { RestaurantModel } from "src/model/entities";
 import { ConnectionService } from "src/service/connection.service";
+import { Utils } from "src/util/utils";
 import { IRestaurantRepository } from "./interface/restaturant.repository.interface";
 
 @Injectable()
@@ -11,14 +12,14 @@ export class RestaurantRepository implements IRestaurantRepository {
   constructor(private readonly connection: ConnectionService) { }
 
   async createRestaurant(model: RestaurantModel): Promise<number> {
-    let id = null;
+    let id = 0;
     await this.connection.knex.transaction(async (trx) => {
       try {
         const response = await trx('restaurant')
           .withSchema(process.env.DB_SCHEMA)
-          .insert(model)
-        if (response && response.length > 0) {
-          id = response[0];
+          .insert(model);
+        if (response) {
+          id = response.rowCount;
         }
         await trx.commit();
       } catch (error) {
@@ -39,7 +40,21 @@ export class RestaurantRepository implements IRestaurantRepository {
       if (!response || response.length == 0) {
         return null;
       }
-      return response;
+      const first = response[0];
+      return {
+        created_at: first.created_at,
+        id: first.id,
+        lat: Utils.parseNumber(first.lat),
+        lng: Utils.parseNumber(first.lng),
+        name: first.name,
+        city: first.city,
+        email: first.email,
+        phone: first.phone,
+        rating: Utils.toInt(first.rating),
+        site: first.site,
+        state: first.state,
+        updated_at: first.updated_at
+      };
     } catch (exception) {
       this.logger.error(`Error searching the restaurant ${id}`, exception);
     }

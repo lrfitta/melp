@@ -11,5 +11,5 @@ export interface RestaurantModel {
   lat: number;
   lng: number;
   created_at: Date;
-  updated_at: Date;
+  updated_at?: Date | null;
 }

@@ -1,6 +1,6 @@
 import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpException, HttpStatus } from "@nestjs/common";
 import { Response } from 'express';
-import { ResponseOrder } from "src/dto/response.dto";
+import { ResponseRestaurant } from "src/dto/response.dto";
 import { MelpError } from "./melp.exception";
 
 /**
@@ -22,7 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           statusCode: error.httpStatus,
           error: error.typeError || 'Unknow',
           message: [error.message]
-        } as ResponseOrder);
+        } as ResponseRestaurant);
     } else if (exception instanceof BadRequestException) {//Validation Exception
       response
       .status(status)
@@ -30,7 +30,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         statusCode: HttpStatus.BAD_REQUEST,
         error: 'Data',
         message: exception?.getResponse()['message']
-      } as ResponseOrder);
+      } as ResponseRestaurant);
     } else { //Uncontrolled Exception
       response
         .status(status)
@@ -38,7 +38,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
           error: 'Unknow',
           message: [exception.message]
-        } as ResponseOrder);
+        } as ResponseRestaurant);
     }
 
   }

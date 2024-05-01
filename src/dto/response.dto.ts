@@ -1,5 +1,5 @@
 //Standard Response
-export interface ResponseOrder {
+export interface ResponseRestaurant {
   message: string[];
   error?: string;
   statusCode: number;

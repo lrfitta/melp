@@ -12,5 +12,20 @@ export class Utils {
     } catch (e) {
       return def;
     }
-  }  
+  }
+
+  /**
+ * Transform a String to Float
+ * @param str  String to transform
+ * @param def Default value
+ * @returns Numeric value.
+ */
+  static parseNumber(str, def = 0): number {
+    try {
+      const parsed = parseFloat(String(str || '0').trim());
+      return parsed;
+    } catch (e) {
+      return def;
+    }
+  }
 }
